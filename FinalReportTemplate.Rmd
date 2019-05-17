@@ -1,0 +1,202 @@
+---
+title: "AIDs Drug Tests"
+author: "Vanessa Cervantes"
+date: "May 11, 2019"
+output: 
+  html_document:
+    number_section: true
+    toc: true
+---
+```{r include=FALSE,echo=FALSE}
+require(tidyverse)
+require(tigerstats)
+require(dplyr)
+avast <-read.csv(file="avastivironal.csv",header=TRUE)
+avastIV = filter(avast, Ivdrug=='user')
+avastLBGT = filter(avast, LBGT=='yes')
+avastF = filter(avast, sex=='F')
+avastM = filter(avast, sex=='M')
+```
+
+# Introduction
+
+<!--In this section you explain what you are trying to show.  Where did the data come from?  What is the research or other question you are trying to answer?.  If you skimp in this section expect to be marked down in your grade. Paint a picture of the project a couple of paragraphs is expected!-->
+
+A new  preventative aides (abacavirinol) is under test in clinical trials. Analyze the effectiveness of this drug across the board. Consider population subgroups by gender, drug use, and sexual orientation. Finish this!
+
+The first question is this: does abacavirinol have any affect on wheter one contracts AIDS or not?
+
+$H_0:$ avacabirinol has no effect on whether one contracts AIDS or not.
+$H_1:S avacabirinol has an effect on wheter on contracts. AIDS or not.
+
+The reamining questions are: does abacavirinol have a different effect base on gender.
+
+$H_0:$ gender has no effect on whether abacavirinol offers any protection against contracting AIDS.
+
+# Methods
+
+<!--Decide on your methods:  use "variable analysis" or other appropriate descriptors.  Make sure to choose at least one graphical method and at least one numerical method. Discuss what data manipulations may be needed for example subsetting or other binning procedures and what sort of graphical displays and inferential tools will be used!-->
+
+For each hypothesis test the graphical summary will be a bar plot, the numerical summary will be a cross tabulation, and a chi-squared test will be used for the inferential results. 
+
+#Results Gen Population Did vaccine make a difference?
+
+<!--Divide this section into two sub-sections:  One for your descriptive  results and one for your inferential results.!-->
+
+Is the vaccine effective in the general population?
+
+## Descriptive Results
+
+### Graphical Descriptive Results
+
+<!--Graphical results here.  Make sure to show your code.  Provide appropriate labels for axes, giving units if possible, and provide a good title for the graph, too.  Use the graphical results to describe the patterns if any that exist in the data as focused toward the research question. Bottom line is to explain the features of the graph that are relevant to conforming or departing to what is expected by your null hypothesis !-->
+```{r}
+barchartGC(~infected+treatment, data=avast, type='percent')
+```
+This bar chart shows that people that recieved the drug got aids it appears is smaller than those that got the placebo.
+
+### Numerical Descriptive Results
+
+<!--Numerical results go here. Use the numerical results to describe the patterns if any that exist in the data as focused toward the research question!-->
+```{r}
+genTable = xtabs(~treatment+infected, data=avast)
+print(genTable)
+rowPerc(genTable)
+colPerc(genTable)
+```
+The table shows the amount of people who got the drug or placebo and the results. The vaccine can expose you to aids.
+
+## Inferential Results
+
+<!--State hypothesis clearly.  Make sure your discussion of the inferential test covers all the aspects that the test output produces, such as test statistic, p-value etc.  Make a decision about the null hypothesis, explain the assumptions on which the selected test/procedure was based, and why the chosen procedure satisfys the assumptions and is appropriate to answer the research question!-->
+```{r}
+chisqtestGC(~treatment+infected, data=avast)
+```
+The P value is 0.
+Since the p value is 0 we can conclude that then treatment does not affect whether or not you contract aids or not and we reject the null hypothesis.
+
+# Discussion and Conclusion
+
+<!--Discussion and conclusion here.  If you found a relationship be sure to consider whether the relationship occurs because one of the variavbles causes the other, or whether they perhasps are related for some other reason.  Watch the chapter 6 videos from the GeorgeTown videos collection.!--> 
+OVERALL Null hypothesis is that the vaccine has no effect on the general infected population.
+The p-value was 0, so we reject the null hypothesis which is it does not make a difference because it does make does make a difference.
+
+#Results Gender
+
+<!--Divide this section into two sub-sections:  One for your descriptive  results and one for your inferential results.!-->
+Does gender effect the vaccine effectiveness?
+
+## Descriptive Results
+
+### Graphical Descriptive Results
+
+<!--Graphical results here.  Make sure to show your code.  Provide appropriate labels for axes, giving units if possible, and provide a good title for the graph, too.  Use the graphical results to describe the patterns if any that exist in the data as focused toward the research question. Bottom line is to explain the features of the graph that are relevant to conforming or departing to what is expected by your null hypothesis !-->
+```{r}
+barchartGC(~infected+treatment, data=avastF, type='percent')
+```
+This bar chart shows the difference between male and female population that recieved the drug or placebo and the effectevness. 
+The woman that received the drug had a high probability of having aids so it wouod be best if woman did not get the treatment.
+
+### Numerical Descriptive Results
+
+<!--Numerical results go here. Use the numerical results to describe the patterns if any that exist in the data as focused toward the research question!-->
+```{r}
+genTable = xtabs(~infected+treatment, data=avastF)
+print(genTable)
+```
+The drug has the opposite effecton the woman than it does with men.
+
+## Inferential Results
+
+<!--State hypothesis clearly.  Make sure your discussion of the inferential test covers all the aspects that the test output produces, such as test statistic, p-value etc.  Make a decision about the null hypothesis, explain the assumptions on which the selected test/procedure was based, and why the chosen procedure satisfys the assumptions and is appropriate to answer the research question!-->
+```{r}
+chisqtestGC(~infected+treatment, data=avastF)
+fisher.test(genTable)
+```
+The woman that received the drug had a high probability of having aids so it wouod be best if woman did not get the treatment. But for men it does help if they receive the treatment. It's significant in the wrong direction, if it worked it would reduce the odds ratio, but it did not work because it incresed the odds of getting aids.
+
+# Discussion and Conclusion
+
+<!--Discussion and conclusion here.  If you found a relationship be sure to consider whether the relationship occurs because one of the variavbles causes the other, or whether they perhasps are related for some other reason.  Watch the chapter 6 videos from the GeorgeTown videos collection.!--> 
+GENDER The results demonstrate that the vaccine does affect the results. We reject the Null hypothesis that the vaccine does not affect females, it does affect females and they are more likely to get aids if vaccinated.
+
+
+#Results drug users
+
+<!--Divide this section into two sub-sections:  One for your descriptive  results and one for your inferential results.!-->
+Will being an IV drug user affect the effectivness of the vaccine?
+
+
+
+## Descriptive Results
+
+### Graphical Descriptive Results
+
+<!--Graphical results here.  Make sure to show your code.  Provide appropriate labels for axes, giving units if possible, and provide a good title for the graph, too.  Use the graphical results to describe the patterns if any that exist in the data as focused toward the research question. Bottom line is to explain the features of the graph that are relevant to conforming or departing to what is expected by your null hypothesis !-->
+```{r}
+barchartGC(~infected+treatment, data=avastIV, type='percent')
+```
+
+### Numerical Descriptive Results
+
+<!--Numerical results go here. Use the numerical results to describe the patterns if any that exist in the data as focused toward the research question!-->
+```{r}
+genTable = xtabs(~treatment+infected, data=avastIV)
+print(genTable)
+```
+This numerical chart shows the significant difference between placebo drug and actual drub in the IV drug population. 
+
+## Inferential Results
+
+<!--State hypothesis clearly.  Make sure your discussion of the inferential test covers all the aspects that the test output produces, such as test statistic, p-value etc.  Make a decision about the null hypothesis, explain the assumptions on which the selected test/procedure was based, and why the chosen procedure satisfys the assumptions and is appropriate to answer the research question!-->
+```{r}
+chisqtestGC(~treatment+infected, data=avastIV)
+```
+The inferential results for the population that uses IV Drug shows that the p value is 0.0, therefore people who use IV drugs are at higher risk to get aids.
+
+# Discussion and Conclusion
+
+<!--Discussion and conclusion here.  If you found a relationship be sure to consider whether the relationship occurs because one of the variavbles causes the other, or whether they perhasps are related for some other reason.  Watch the chapter 6 videos from the GeorgeTown videos collection.!-->
+IV DRUG The results demonstrate that the vaccine is slightly less effective with IV drug users.
+The null hypothesis was that IV Drug use had no effect on the effectiveness of the vaccine.
+The p-value was 0.0, so we fail to reject the null hypothesis which is greater than .05. Because the response and explanatory values are categorical, the bar plot and chi-squared test | test for independence. 
+
+#Results sexual orientation
+
+<!--Divide this section into two sub-sections:  One for your descriptive  results and one for your inferential results.!-->
+
+Is the vaccine effectevness affceted by sexual orientation?
+
+## Descriptive Results
+
+### Graphical Descriptive Results
+
+<!--Graphical results here.  Make sure to show your code.  Provide appropriate labels for axes, giving units if possible, and provide a good title for the graph, too.  Use the graphical results to describe the patterns if any that exist in the data as focused toward the research question. Bottom line is to explain the features of the graph that are relevant to conforming or departing to what is expected by your null hypothesis !-->
+```{r}
+barchartGC(~infected+treatment, data=avastLBGT, type='percent')
+```
+This bar chart here shows that there is not a huge difference between the placebo and drug among LBGT population.
+
+### Numerical Descriptive Results
+
+<!--Numerical results go here. Use the numerical results to describe the patterns if any that exist in the data as focused toward the research question!-->
+```{r}
+genTable = xtabs(~treatment+infected, data=avastLBGT)
+print(genTable)
+```
+
+The LGBT population should take the treatment because it significantly reduce aids infection.
+## Inferential Results
+
+<!--State hypothesis clearly.  Make sure your discussion of the inferential test covers all the aspects that the test output produces, such as test statistic, p-value etc.  Make a decision about the null hypothesis, explain the assumptions on which the selected test/procedure was based, and why the chosen procedure satisfys the assumptions and is appropriate to answer the research question!-->
+```{r}
+chisqtestGC(~treatment+infected, data=avastLBGT)
+```
+The inferential results say that the LBGT community should take the vaccine because it will decrese their chances of contracting aids and we reject the null hypothesis.
+
+
+# Discussion and Conclusion
+
+<!--Discussion and conclusion here.  If you found a relationship be sure to consider whether the relationship occurs because one of the variables causes the other, or whether they perhasps are related for some other reason.  Watch the chapter 6 videos from the GeorgeTown videos collection.!-->
+
+The relationship we found was that the LGBT population benefit from the vaccine the most, while the other groups shared similar results with less benefits. Furthermore, the drug has an opposite effect on woman than it does on men. The results show that it would be best if woman did not get the treatment, because they have a higher probability rate of getting infected because of the negative effects the drug has on them. In conclusion, the vaccination carries pros and cons that can be either benefitial or detrimental in relation to specific groups of sex and sexual orientation. 
